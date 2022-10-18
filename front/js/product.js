@@ -4,15 +4,19 @@ const id = urlParams.get("id")
     //console.log(queryString)
     console.log( {productId: id} )
 let itemPrice = 0
+let imgUrl, altText,articleName
 
 fetch (`http://localhost:3000/api/products/${id}` )
     .then((response) => response.json())
     .then((res) => detail(res))
 
 function detail(kanap){
-    const {altTxt, colors, description, imageUrl, name,price,} = kanap
+    const {altTxt, colors, description, imageUrl, name, price } = kanap
     itemPrice = price
-    creerImage (imageUrl,altTxt)
+    imgUrl = imageUrl
+    altText = altTxt
+    articleName = name
+    creerImage (imageUrl, altTxt)
     creerTitle(name)
     creerPrice(price)
     creerDescription(description)
@@ -71,7 +75,10 @@ if (button != null) {
             id: id,
             color: color,
             quantity: quantity,
-            price: itemPrice
+            price: itemPrice,
+            imageUrl: imgUrl,
+            altTxt: altText,
+            name: articleName
         }
         localStorage.setItem(id, JSON.stringify(data))
         window.location.href = "cart.html"
