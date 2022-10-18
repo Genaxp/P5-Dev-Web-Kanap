@@ -42,8 +42,20 @@ function putSettings(item){
     settings.classList.add("cart__item__content__settings")
 
     addQuantityToSettings(settings, item)
+    addDeleteToSettings(settings)
+
     return settings
 }
+
+function addDeleteToSettings(settings){
+    const div = document.createElement("div")
+    div.classList.add("cart__item__content__settings__delete")
+    const p = document.createElement("p")
+    p.textContent = "Supprimer"
+    div.appendChild(p)
+    settings.appendChild(div)
+}
+
 function addQuantityToSettings(settings, item){
    const quantity = document.createElement("div")
    quantity.classList.add("cart__item__content__settings__quantity")
