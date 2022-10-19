@@ -99,6 +99,7 @@ function addQuantityToSettings(settings, item) {
 function updatePriceQuantity(id, newValue, item) {
     const itemToUpdate = cart.find((item) => item.id === id) 
     itemToUpdate.quantity = Number(newValue)
+    item.quantity = itemToUpdate.quantity
     displayTotalPrice()
     displayTotalQuantity()
     saveDataCache(item)
@@ -106,6 +107,7 @@ function updatePriceQuantity(id, newValue, item) {
 
 function saveDataCache(item) {
     const dataSave = JSON.stringify(item)
+    const key = `${item.id} - ${item.color}`
     localStorage.setItem(item.id, dataSave)
 }
 

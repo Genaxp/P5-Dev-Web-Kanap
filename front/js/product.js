@@ -71,6 +71,7 @@ if (button != null) {
             alert ( "Veuillez choisir une couleur et une quantité")
             return
         }
+        const key = `${id}-${color}`
         const data = {
             id: id,
             color: color,
@@ -80,7 +81,7 @@ if (button != null) {
             altTxt: altText,
             name: articleName
         }
-        localStorage.setItem(id, JSON.stringify(data))
+        localStorage.setItem(key, JSON.stringify(data))
         window.location.href = "cart.html"
     })
 }
