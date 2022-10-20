@@ -69,13 +69,35 @@ function putSettings(item) {
     return settings
 }
 
-function addDeleteToSettings(settings) {
+function addDeleteToSettings(settings, item) {
     const div = document.createElement("div")
     div.classList.add("cart__item__content__settings__delete")
+    div.addEventListener("click", ()  => deleteArticle(item))
+
     const p = document.createElement("p")
     p.textContent = "Supprimer"
     div.appendChild(p)
     settings.appendChild(div)
+}
+
+function deleteArticle(item){
+    const articleToDelete = cart.findIndex(
+        (article) => article.id === item.id && article.color === item.color
+        )
+    delete cart[articleToDelete]
+    console.log(cart)
+    displayTotalPrice()
+    displayTotalQuantity()
+    deleteDataCache(item)
+    deleteArticlePage(item)
+}
+
+function deleteArticlePage(item){
+    const deleteArticle = document.querySelector(
+        `article[data-id="${item.id}"][data-color="${item.color}"]`
+    )
+    consosle.log("delete", deleteArticle)
+    deleteArticle.remove(item)
 }
 
 function addQuantityToSettings(settings, item) {
@@ -105,10 +127,17 @@ function updatePriceQuantity(id, newValue, item) {
     saveDataCache(item)
 }
 
+function deleteDataCache(item){
+    const key = `${item.id}-${item.color}`
+    console.log("delete",key)
+    localStorage.removeItem(key)
+
+}
+
 function saveDataCache(item) {
     const dataSave = JSON.stringify(item)
     const key = `${item.id} - ${item.color}`
-    localStorage.setItem(item.id, dataSave)
+    localStorage.setItem(key, dataSave)
 }
 
 function putDescription(item) {
