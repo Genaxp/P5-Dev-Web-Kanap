@@ -1,8 +1,7 @@
 const queryString = window.location.search
 const urlParams = new URLSearchParams(queryString)
 const id = urlParams.get("id")
-    //console.log(queryString)
-    console.log( {productId: id} )
+  
 let itemPrice = 0
 let imgUrl, altText,articleName
 
@@ -16,14 +15,14 @@ function detail(kanap){
     imgUrl = imageUrl
     altText = altTxt
     articleName = name
-    creerImage (imageUrl, altTxt)
-    creerTitle(name)
-    creerPrice(price)
-    creerDescription(description)
-    creerColors(colors)
+    putImage (imageUrl, altTxt)
+    putTitle(name)
+    putPrice(price)
+    putDescription(description)
+    putColors(colors)
 }
 
-function creerImage(imageUrl,altTxt){
+function putImage(imageUrl,altTxt){
     const image = document.createElement("img")
     image.src = imageUrl
     image.alt = altTxt
@@ -32,26 +31,24 @@ function creerImage(imageUrl,altTxt){
 
 }
 
-function creerTitle(name){
+function putTitle(name){
     const h1 = document.querySelector("#title")
     if (h1 != null) h1.textContent = name
 }
 
-function creerPrice(price){
+function putPrice(price){
     const span = document.querySelector("#price")
     if (span != null) span.textContent = price
 }
 
-
-function creerDescription(description){
+function putDescription(description){
     const descrip = document.querySelector("#description")
     if (descrip != null) descrip.textContent = description
 }
 
-function creerColors(colors){
+function putColors(colors){
     const select = document.querySelector("#colors")
     if (select != null){
-        console.log(colors)
         colors.forEach((color) =>{
             const option = document.createElement("option")
             option.value = color
@@ -85,3 +82,10 @@ if (button != null) {
         window.location.href = "cart.html"
     })
 }
+
+// function quantityMinMax(quantity){
+//     const quantity = document.querySelector("#quantity")
+//     quantity.min = "1"
+//     quantity.max = "100"
+//     quantity.appendChild()
+// }

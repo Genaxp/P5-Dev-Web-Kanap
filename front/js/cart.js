@@ -4,6 +4,7 @@ retrieveItems ()
 
 cart.forEach((item) => displayItem(item))
 
+// récuperation des données des articles en objet
 function retrieveItems () {
     const numberOfItems = localStorage.length
     for (let i = 0; i < numberOfItems; i++){
@@ -31,6 +32,7 @@ function displayTotalQuantity(){
     totalQuantity.textContent = total
 }
 
+// création du prix total 
 function displayTotalPrice() {
     //let total = 0
     const totalPrice = document.querySelector("#totalPrice")
@@ -46,7 +48,7 @@ function displayTotalPrice() {
     // })
     totalPrice.textContent = total
 }
-
+// création de la div cart item content
 function putItemContent(item) {
     const itemContent = document.createElement("div")
     itemContent.classList.add("cart__item__content")
@@ -80,6 +82,8 @@ function addDeleteToSettings(settings, item) {
     settings.appendChild(div)
 }
 
+// création de la fonction supprimer un article
+
 function deleteArticle(item){
     const articleToDelete = cart.findIndex(
         (article) => article.id === item.id && article.color === item.color
@@ -92,13 +96,14 @@ function deleteArticle(item){
     deleteArticlePage(item)
 }
 
+//supression article de la page visible
 function deleteArticlePage(item){
     const deleteArticle = document.querySelector(
         `article[data-id="${item.id}"][data-color="${item.color}"]`
     )
-    consosle.log("delete", deleteArticle)
     deleteArticle.remove(item)
 }
+
 
 function addQuantityToSettings(settings, item) {
    const quantity = document.createElement("div")
@@ -140,6 +145,7 @@ function saveDataCache(item) {
     localStorage.setItem(key, dataSave)
 }
 
+// création de la partie html div, h2, p 
 function putDescription(item) {
      
     const description = document.createElement("div")
@@ -159,7 +165,7 @@ function putDescription(item) {
     description.appendChild( pp)
     return description 
 }
-
+// création html de l'img
 function putImage(item){
     const div = document.createElement("div")
     div.classList.add("cart__item__img")
