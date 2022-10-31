@@ -68,24 +68,60 @@ if (button != null) {
             alert ( "Veuillez choisir une couleur et une quantité")
             return
         }
+        const cartStorage = localStorage.getItem("cart")
+        const cart = cartStorage ? JSON.parse(cartStorage) : {}
         const key = `${id}-${color}`
-        const data = {
-            id: id,
-            color: color,
-            quantity: quantity,
-            price: itemPrice,
-            imageUrl: imgUrl,
-            altTxt: altText,
-            name: articleName
+
+ 
+        if (cart[key]) {
+            cart[key].quantity = Number(cart[key].quantity ) + Number(quantity)
         }
-        localStorage.setItem(key, JSON.stringify(data))
+        else{
+            const data = {
+                id: id,
+                color: color,
+                quantity: quantity,   
+            }
+            cart[key] = data
+        }
+        localStorage.setItem("cart", JSON.stringify(cart))
         window.location.href = "cart.html"
     })
 }
 
+if (cart[key]) {
+    const dataCache = {
+        price: itemPrice,
+        imageUrl: imgUrl,
+        altTxt: altText,
+        name: articleName
+    }
+
+    cart[key]=dataCache
+    
+    localStorage.setItem("cart", JSON.stringify(cart))
+    window.location.href = "cart.html"
+}
+
+
+
+// mettre une API à chercher 
+
+// price: itemPrice,
+//             imageUrl: imgUrl,
+//             altTxt: altText,
+//             name: articleName
+
+
+function isValid(_quantity){
+    return /[0-9]{1,100}$/.test(_quantity);
+    alert ("Choisissez une quantité entre 1 et 100")
+}
+
 // function quantityMinMax(quantity){
-//     const quantity = document.querySelector("#quantity")
+//     const quantityM = document.querySelector("quantity")
 //     quantity.min = "1"
 //     quantity.max = "100"
-//     quantity.appendChild()
+//     quantityM.appendChild()
+//     console.log(quantity)
 // }

@@ -6,25 +6,9 @@ fetch("http://localhost:3000/api/products")
 function ajoutProduits(produit){
     console.log(produit)
 
-    //let i = 0;
-    //do {
-     //   i += 1;
-    // console.log(i);
-    //} while (i < 7);
-
-    //for (let i = 0; i < produit.lenght;i++) {
-    //   console.log("kanap numéro:", i ,produit[i])
-    //}
-
     produit.forEach((kanap) => {
         console.log("kanap: ", kanap)
     
-        //const _id = kanap //produit[0]._id
-        //const imageUrl = kanap //produit[0].imageUrl
-        //const altTxt = kanap //produit[0].altTxt
-        //const name = kanap //produit[0].name
-        //const description = kanap //produit[0].description
-
         const { _id, imageUrl, altTxt, name, description} = kanap
         
         const anchor = faireAnchor(_id)
