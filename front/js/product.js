@@ -89,24 +89,6 @@ if (button != null) {
     })
 }
 
-if (cart[key]) {
-    const dataCache = {
-        price: itemPrice,
-        imageUrl: imgUrl,
-        altTxt: altText,
-        name: articleName
-    }
-
-    cart[key]=dataCache
-    
-    localStorage.setItem("cart", JSON.stringify(cart))
-    window.location.href = "cart.html"
-}
-
-
-
-// mettre une API à chercher 
-
 // price: itemPrice,
 //             imageUrl: imgUrl,
 //             altTxt: altText,
@@ -118,10 +100,3 @@ function isValid(_quantity){
     alert ("Choisissez une quantité entre 1 et 100")
 }
 
-// function quantityMinMax(quantity){
-//     const quantityM = document.querySelector("quantity")
-//     quantity.min = "1"
-//     quantity.max = "100"
-//     quantityM.appendChild()
-//     console.log(quantity)
-// }
