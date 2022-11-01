@@ -1,7 +1,7 @@
 const cart = []
 
 retrieveItems()
-cart.forEach((item) => displayItem(item))
+cart.forEach((item) => displayItem())
 
 //ajout évènement au click et envoi du formulaire
 
@@ -10,7 +10,9 @@ orderButton.addEventListener("click", (e) => submitForm(e))
 
 // récupération des données des articles en objet
 function retrieveItems () {
-    const numberOfItems = localStorage.length
+    const numberOfItems = localStorage.getItem("cart")
+    console.log(numberOfItems)
+
     for (let i = 0; i < numberOfItems; i++) {
         const item = localStorage.getItem(localStorage.key(i)) || ""
         const itemObject = JSON.parse(item)

@@ -87,16 +87,24 @@ if (button != null) {
         localStorage.setItem("cart", JSON.stringify(cart))
         window.location.href = "cart.html"
     })
+    
+    isValid()
 }
 
-// price: itemPrice,
+// price:      itemPrice,
 //             imageUrl: imgUrl,
 //             altTxt: altText,
 //             name: articleName
 
 
-function isValid(_quantity){
-    return /[0-9]{1,100}$/.test(_quantity);
-    alert ("Choisissez une quantité entre 1 et 100")
+
+function isValid() {
+    const numbers = document.querySelector("#quantity").value
+    const regex =  /[0-9]{1,100}/
+    if(regex.test(numbers) === false){
+        alert ("Choisissez une quantité entre 1 et 100")
+        return true
+    }
+    return false
 }
 
