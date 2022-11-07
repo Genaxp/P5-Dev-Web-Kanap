@@ -91,13 +91,6 @@ if (button != null) {
     isValid()
 }
 
-// price:      itemPrice,
-//             imageUrl: imgUrl,
-//             altTxt: altText,
-//             name: articleName
-
-
-
 function isValid() {
     const numbers = document.querySelector("#quantity").value
     const regex =  /[0-9]{1,100}/
