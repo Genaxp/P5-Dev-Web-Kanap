@@ -1,69 +1,35 @@
+// Récupérer tous les items du CART depuis le localStorage avec une boucle
+let CART = localStorage.getItem("cart")
+if (CART){
+    CART= JSON.parse(CART)
+}else {
+    CART={}
+}
+console.log(CART)
 
-
-// récupérer tous les items depuis le localStorage avec une boucle
-const CART = []
-const numberOfItems = localStorage.length
-retrieveItemsCache()
-
-CART.forEach((item) => displayItem(item))
-
-//la Boucle 
-function retrieveItemsCache(){
-    for (let i = 0; i < numberOfItems; i++){
-        const item = localStorage.getItem(localStorage.key(i))
-        const realItem = JSON.parse (item)
-        CART.push(realItem)
-    }
+//***********Récupération des données sur localStorage***********
+for (let i in CART){ //in = la clé
+    let item = CART[i]
+    let id =item.id
+    console.log(id)
+    let url = `http://localhost:3000/api/products/${id}`
+    fetch(url)
+    .then((response) => response.json())
+    .then((res) => displayItem(res))
+    .catch((err) =>console.log('Erreur:' + err));
 }
 
-//Récupération des données sur localStorage
-const button = document.querySelector("#addToCart")
-if (button != null) {
-    button.addEventListener("click",(e) => {
-        const {altTxt, imageUrl, name, price } = cart
-        itemPrice = price
-        imgUrl = imageUrl
-        altText = altTxt
-        articleName = name
-    })
-    console.log(cart)
-}
-
-        // const imageUrl = document.querySelector("#imageUrl").value
-        // const altTxt = document.querySelector("#altTxt").value
-        // const name = document.querySelector("#name").value
-        // const price = document.querySelector("#price").value
-
-        const cartStorage = localStorage.getItem("cart")
-        const cart = cartStorage ? JSON.parse(cartStorage) : {}
-       
-    //    if({
-    //         const data = {
-    //         price: itemPrice,
-    //         imageUrl: imgUrl,
-    //         altTxt: altText,
-    //         name: articleName 
-    //         }
-    //         console.log(data)
-    
-    //     }
-    //     localStorage.setItem("cart", JSON.stringify(cart))
-    //     // window.location.href = "cart.html"
-    // })
- 
 function displayItem(item){
-    const article = putArticle(item)
-    displayArticle(article)
-    const div = putImageDiv(item)
-    article.appendChild(div)  
-}
-// création de l'article HTML
-function putArticle(item){
-    const article = document.createElement("article") 
-    article.classList.add("cart__item") 
-    article.dataset.id = `${CART.id}`//???  //rajout d'un attribut html
-    article.dataset.color = `${CART.color}`//??? //rajout d'un attribut html
-    return article
+    const article = putArticle(item)  //fais un article
+    const imgdiv = putImageDiv(item)       // fais une div
+    article.appendChild(imgdiv) 
+
+   const itemContent = putItemContent(item) //création de l'attribut HTML
+   article.appendChild(itemContent)
+
+    displayArticle(article)     //montre le
+    displayTotalPrice()
+    displayTotalQuantity()
 }
 
 // // mettre l'article dans la page HTML
@@ -71,7 +37,93 @@ function displayArticle(article){
     document.querySelector("#cart__items").appendChild(article)
 }
 
-// création de l'image
+
+function displayTotalQuantity(){
+    const totalQuantity = document.querySelector("#totalQuantity")
+    const total = CART.reduce((total, item) => total + item.quantity, 0)
+    totalQuantity.textContent = total
+}
+
+// création du prix total 
+function displayTotalPrice() {
+    const totalPrice = document.querySelector("#totalPrice")
+    const total = CART.reduce((total, item) => total + item.price * item.quantity, 0)
+    totalPrice.textContent = total
+}
+
+
+// création de la div cart item content
+function putItemContent(item) {
+    const itemContent = document.createElement("div") //création de la DIV
+    itemContent.classList.add("cart__item__content") 
+
+    const description = putDescription(item)
+    const settings = putSettings(item)
+
+    itemContent.appendChild(description)
+    itemContent.appendChild(settings)
+    return itemContent
+}
+
+function putSettings(item) {
+    const settings =  document.createElement("div")
+    settings.classList.add("cart__item__content__settings")
+    QuantityToSettings(settings, item)
+    DeleteToSettings(settings)
+    return settings
+}
+
+function DeleteToSettings(settings, item) {
+    const div = document.createElement("div")
+    div.classList.add("cart__item__content__settings__delete")
+    // div.addEventListener("click", ()  => deleteArticle(item))
+
+    const p = document.createElement("p")
+    p.textContent = "Supprimer"
+    div.appendChild(p)
+    settings.appendChild(div)
+}
+
+function QuantityToSettings(settings, item) {
+    const quantity = document.createElement("div")
+    quantity.classList.add("cart__item__content__settings__quantity")
+
+    const p = document.createElement("p")
+    p.textContent = "Qté : "
+    quantity.appendChild(p)
+
+    const input = document.createElement("input")
+    input.type = "number"
+    input.classList.add("itemQuantity")
+    input.name = "itemQuantity"
+    input.min = "1"
+    input.max = "100"
+    input.defaultValue = item.quantity
+    // input.addEventListener("input", () => updatePriceQuantity( item.id, input.value, item))
+    quantity.appendChild(input)
+    settings.appendChild(quantity)
+}    
+
+function putDescription(item) {
+    const description = document.createElement("div")
+    description.classList.add("cart__item__content__description")
+
+    const h2 = document.createElement("h2")
+    h2.textContent = item.name
+    
+    const p = document.createElement("p")
+    p.textContent = item.colors
+
+    const pp = document.createElement("p")
+    pp.textContent = item.price + "€"
+
+    description.appendChild( h2)//appendé à la description
+    description.appendChild( p)
+    description.appendChild( pp)
+    return description
+}
+
+// création de l'image 
 function putImageDiv(item){
     const div = document.createElement("div")// création de la DIV HTML
     div.classList.add("cart__item__img")
@@ -81,69 +133,21 @@ function putImageDiv(item){
     image.alt = item.altTxt 
     div.appendChild(image)
     return div
+} 
+
+// création de l'article HTML
+function putArticle(item){
+    const article = document.createElement("article") 
+    article.classList.add("cart__item") 
+    article.dataset.id = item.id//??? rien n'apparaît  //rajout d'un attribut html
+    article.dataset.color = item.color//??? rien n'apparaît //rajout d'un attribut html
+    return article
 }
 
-// function displayItem(item) {
-//     const article = putArticle(item)
-//     const image = putImage(item)
-//     article.appendChild(div)
-//    const itemContent = putItemContent(item)
-//    article.appendChild(itemContent)
-//     displayArticle (article)
-//     displayTotalPrice()
-//     displayTotalQuantity()
-// }
+// ***************************************************
+// // travaille passé vérifié à moitié
 
-// function displayTotalQuantity(){
-//     const totalQuantity = document.querySelector("#totalQuantity")
-//     const total = CART.reduce((total, item) => total + item.quantity, 0)
-//     totalQuantity.textContent = total
-// }
-
-// // création du prix total 
-// function displayTotalPrice() {
-    
-//     const totalPrice = document.querySelector("#totalPrice")
-//     const total = CART.reduce((total, item) => total + item.price * item.quantity, 0)
-
-//     totalPrice.textContent = total
-// }
-
-// // création de la div cart item content
-// function putItemContent(item) {
-//     const itemContent = document.createElement("div")
-//     itemContent.classList.add("cart__item__content")
-
-//     const description = putDescription(item)
-//     const settings = putSettings(item)
-
-//     itemContent.appendChild(description)
-//     itemContent.appendChild(settings)
-//     return itemContent
-// }
-
-// function putSettings(item) {
-//     const settings =  document.createElement("div")
-//     settings.classList.add("cart__item__content__settings")
-
-//     addQuantityToSettings(settings, item)
-//     addDeleteToSettings(settings, item)
-
-//     return settings
-// }
-
-// function addDeleteToSettings(settings, item) {
-//     const div = document.createElement("div")
-//     div.classList.add("cart__item__content__settings__delete")
-//     div.addEventListener("click", ()  => deleteArticle(item))
-
-//     const p = document.createElement("p")
-//     p.textContent = "Supprimer"
-//     div.appendChild(p)
-//     settings.appendChild(div)
-// }
-
-// // création de la fonction supprimer un article
+// création de la fonction supprimer un article
 
 // function deleteArticle(item){
 //     const articleToDelete = CART.findIndex(
@@ -155,6 +159,7 @@ function putImageDiv(item){
 //     deleteDataCache(item)
 //     deleteArticlePage(item)
 //     deleteArticle(item)
+   
 // }
 
 // //supression article de la page visible
@@ -162,26 +167,9 @@ function putImageDiv(item){
 //     const deleteArticle = document.querySelector(
 //         `article[data-id="${item.id}"][data-color="${item.color}"]`
 //     )
-//     deleteDataCache(item)
+//     deleteDataCache(item)  
 // }
 
-// function addQuantityToSettings(settings, item) {
-//    const quantity = document.createElement("div")
-//    quantity.classList.add("cart__item__content__settings__quantity")
-//    const p = document.createElement("p")
-//    p.textContent = "Qté : "
-//    quantity.appendChild(p)
-//    const input = document.createElement("input")
-//    input.type = "number"
-//    input.classList.add("itemQuantity")
-//    input.name = "itemQuantity"
-//    input.min = "1"
-//    input.max = "100"
-//    input.value = item.quantity
-//    input.addEventListener("input", () => updatePriceQuantity( item.id, input.value, item))
-//    quantity.appendChild(input)
-//    settings.appendChild(quantity)
-// }
 
 // function updatePriceQuantity(id, newValue, item) {
 //     const itemToUpdate = CART.find((item) => item.id === id) 
@@ -202,52 +190,6 @@ function putImageDiv(item){
 //     const key = `${item.id} - ${item.color}`
 //     localStorage.setItem(key, dataSave)
 // }
-
-// // création de la partie html div, h2, p 
-// function putDescription(item) {
-     
-//     const description = document.createElement("div")
-//     description.classList.add("cart__item__content__description")
-
-//     const h2 = document.createElement("h2")
-//     h2.textContent = item.name
-    
-//     const p = document.createElement("p")
-//     p.textContent = item.color
-
-//     const pp = document.createElement("p")
-//     pp.textContent = item.price + "€"
-
-//     description.appendChild( h2)
-//     description.appendChild( p)
-//     description.appendChild( pp)
-//     return description 
-// }
-
-// // création html de l'img
-// function putImage(item){
-//     const div = document.createElement("div")
-//     div.classList.add("cart__item__img")
-
-//     const image = document.createElement("img")
-//     image.src = item.imageUrl
-//     image.alt = item.altTxt
-//     div.appendChild(image)
-//     return div
-// }
-
-// function putArticle(item){
-//     const article = document.createElement("article")
-//     article.classList.add("card__item")
-//     article.dataset.id = item.id
-//     article.dataset.color = item.color
-//     return article
-// }
-
-// function displayArticle(article) {
-//     document.querySelector("#cart__items").appendChild(article)
-// }
-
 
 // //******************************création Page du form*****************************************
 
