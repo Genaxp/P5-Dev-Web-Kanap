@@ -1,16 +1,20 @@
+// Récupération paramètre d'URL
 const queryString = window.location.search
 const urlParams = new URLSearchParams(queryString)
 const id = urlParams.get("id")
   
 let itemPrice = 0
 let imgUrl, altText,articleName
+useButton()
 
-fetch (`http://localhost:3000/api/products/${id}` )
+
+url = `http://localhost:3000/api/products/${id}`
+fetch (url)
     .then((response) => response.json())
     .then((res) => detail(res))
 
 function detail(kanap){
-    const {altTxt, colors, description, imageUrl, name, price } = kanap
+    const { price , imageUrl, altTxt,name, description , colors} = kanap
     itemPrice = price
     imgUrl = imageUrl
     altText = altTxt
@@ -42,8 +46,8 @@ function putPrice(price){
 }
 
 function putDescription(description){
-    const descrip = document.querySelector("#description")
-    if (descrip != null) descrip.textContent = description
+    const p = document.querySelector("#description")
+    if (p != null) p.textContent = description
 }
 
 function putColors(colors){
@@ -58,21 +62,20 @@ function putColors(colors){
     }
 }
 
-const button = document.querySelector("#addToCart")
-if (button != null) {
-    button.addEventListener("click",(e) => {
-        const color = document.querySelector("#colors").value
-        const quantity = document.querySelector("#quantity").value
+function useButton() {
+    const button = document.querySelector("#addToCart")
 
-        if (color == null || color ==="" || quantity == null || quantity==0){
-            alert ( "Veuillez choisir une couleur et une quantité")
-            return
-        }
+    if (button != null)  
+        button.addEventListener("click",(e) => {
+            const color = document.querySelector("#colors").value
+            const quantity = document.querySelector("#quantity").value
+        if (isValidNumbersQuantity()) return
+        if (isCartValid(color,quantity)) return
+
         const cartStorage = localStorage.getItem("cart")
         const cart = cartStorage ? JSON.parse(cartStorage) : {}
         const key = `${id}-${color}`
 
- 
         if (cart[key]) {
             cart[key].quantity = Number(cart[key].quantity ) + Number(quantity)
         }
@@ -80,24 +83,29 @@ if (button != null) {
             const data = {
                 id: id,
                 color: color,
-                quantity: quantity,   
+                quantity: Number(quantity)   
             }
             cart[key] = data
-        }
+        }        
         localStorage.setItem("cart", JSON.stringify(cart))
         window.location.href = "cart.html"
     })
-    
-    isValid()
 }
 
-function isValid() {
+function  isCartValid(color,quantity){
+    if (color == null || color ==="" || quantity == null || quantity==0){
+    alert ( "Veuillez choisir une couleur et une quantité")
+    return
+    }      
+}
+     
+function isValidNumbersQuantity() {
     const numbers = document.querySelector("#quantity").value
     const regex =  /[0-9]{1,100}/
-    if(regex.test(numbers) === false){
+    if(regex.test(numbers) === true){
         alert ("Choisissez une quantité entre 1 et 100")
         return true
     }
-    return false
+    return 
 }
 

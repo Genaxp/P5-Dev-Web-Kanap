@@ -36,11 +36,11 @@ function appendElementsToArticle(article, image, h3, p) {
     return anchor
 } 
 
-function appendArticleaAnchor(anchor, article){ 
+function appendArticleaAnchor(anchor, article) { 
     const items = document.querySelector("#items")
         {   items.appendChild(anchor)
             anchor.appendChild(article)
-            console.log("elt ajouté à items",items)
+            console.log("elt ajouté à items", items)
         }     
  }
 
@@ -51,7 +51,7 @@ function appendArticleaAnchor(anchor, article){
     return image
 }
 
-function faireH3(name){
+function putH3(name){
     const h3 = document.createElement("h3")
     h3.textContent = name
     h3.classList.add("productName") // permet d'accéder directemetn à la liste des classes
