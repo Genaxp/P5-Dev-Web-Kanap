@@ -1,35 +1,36 @@
-fetch("http://localhost:3000/api/products")
-    .then((response) => response.json())
-    .then((res) => ajoutProduits(res))
-
+// Envoi requête HTTPde type GET au service web ===>renvoie promesse
+let url = `http://localhost:3000/api/products`
+fetch(url)
+    .then((response) => response.json()) //fonction appelée pour récupérer le résultat
+    .then((res) => putItemsOnPage(res)) // récupération de la vraie valeur, résultatJSON est une promesse
+    .catch((err) => {
+        console.log('Erreur: ' + err)
+    })
     
-function ajoutProduits(produit){
-    console.log(produit)
-
-    produit.forEach((kanap) => {
-        console.log("kanap: ", kanap)
-    
+function putItemsOnPage(item){
+    item.forEach((kanap) => {    
         const { _id, imageUrl, altTxt, name, description} = kanap
         
-        const anchor = faireAnchor(_id)
+        const anchor = putAnchor(_id)
         const article = document.createElement("article")
-        const image = faireImg(imageUrl, altTxt)
-        const h3 = faireH3(name)
-        const p = faireParagraphe(description)
+        const image = putImg(imageUrl, altTxt)
+        const h3 = putH3(name)
+        const p = putP(description)
 
         appendElementsToArticle(article, image, h3, p)
         appendArticleaAnchor(anchor, article)
 
     })
 } 
- function appendElementsToArticle(article, image, h3, p){
+
+function appendElementsToArticle(article, image, h3, p) {
     article.appendChild(image)
     article.appendChild(h3)
     article.appendChild(p)
  }
 
 
- function faireAnchor(id){
+ function putAnchor(id){
     const anchor = document.createElement("a")
     anchor.href = "./product.html?id=" + id
     return anchor
@@ -43,7 +44,7 @@ function appendArticleaAnchor(anchor, article){
         }     
  }
 
- function faireImg(imageUrl, altTxt){
+ function putImg(imageUrl, altTxt){
     const image = document.createElement("img")
     image.src = imageUrl
     image.alt = altTxt
@@ -53,11 +54,11 @@ function appendArticleaAnchor(anchor, article){
 function faireH3(name){
     const h3 = document.createElement("h3")
     h3.textContent = name
-    h3.classList.add("productName")
+    h3.classList.add("productName") // permet d'accéder directemetn à la liste des classes
     return h3
 }
 
-function faireParagraphe(description){
+function putP(description){
     const p = document.createElement("p")
     p.textContent = description
     p.classList.add("productDescription")
