@@ -6,8 +6,9 @@ clearCache()
 function getOrderId(){
 const queryString = window.location.search
 const urlParams = new URLSearchParams(queryString)
-const orderId = urlParams.get("orderId")
-return orderId
+return urlParams.get("orderId")
+console.log(orderId)
+
 }
 
 //envoi les id depuis le local Storage
