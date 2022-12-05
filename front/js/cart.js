@@ -17,10 +17,10 @@ for (let i in CART){ //in = la clé
     .then((response) => response.json())
     .then((res) =>{
         productPrices[res._id] = res.price
-        displayItem(res,cartItem)
+        displayItem(res,cartItem,id)
     })
-    .catch((err) =>console.log('Erreur:' + err));
 }
+
 
 function displayItem(item,cartItem,id){
     const article = putArticle(item,cartItem)  //fais un article
@@ -33,8 +33,8 @@ function displayItem(item,cartItem,id){
     displayArticle(article,item, cartItem,id)     //montre le
     displayTotalPrice(item,cartItem,id)
     displayTotalQuantity(item,cartItem,id)
-    updatePriceQuantity()   
-    deleteArticle()
+    updatePriceQuantity(item,cartItem,id)   
+    deleteArticle(item,cartItem,id)
 }
 
 // // mettre l'article dans la page HTML
@@ -186,150 +186,180 @@ function putArticle(cartItem,item){
     return article
 }
 
-// //******************************création Page du form*****************************************
+//******************************création Page du form*****************************************
 
 // création d'une alerte d'envoi du formulaire
 
-// const btn_form = document.querySelector("#order")
-// btn_form.addEventListener("click",form())
+const btn_order = document.querySelector("#order") 
 
-// function form() {
-//     // e.preventDefault() // permet de ne pqs rechqrger la page 
-//     const form = document.querySelector(".cart__order__form") //création HTML du form
-//     console.log(form.elements)
+btn_order.addEventListener("click",(e) => {
+    e.preventDefault() 
 
-//     const detailForm = insertDetailForm() 
+    const orderDetail = {
+         
+        contact: {
+        firstName: document.querySelector("#firstName").value,
+        lastName: document.querySelector("#lastName").value,
+        address: document.querySelector("#address").value,
+        city: document.querySelector("#city").value,
+        email: document.querySelector("#email").value
+        },
+        products : [idCart]
+    }
 
-//     // //requete post 
-//     fetch("http://localhost:3000/api/products/order", {   // définition des paramètres requête
-//         method: "POST",
-//         body: JSON.stringify(insertDetailForm),
-//         headers: {
-//             Accept: "application/json",
-//             "Content-Type": "application/json",
-//         }
-//     })
-//     .then((response) => response.json())
-//     .then((data) => console.log(data))//{ // envoie sur page de confirmation avec données
-//         // document.location.href = "confirmation.html?id=" + data.orderId
-//         // return console.log(data)
-//         // })
-//     // )
-//     .catch((err) => {
-//         console.error("problème à résoudre : "+ err.message)
-//     })
+    const idCart =[]
+    for(let item in CART){
+        if (!idCart.includes(item.id)){
+        idCart.push(item.id)
+        }   
+    }
+    // mise de l'objet dans le local storage
+    localStorage.setItem("orderValues",JSON.stringify(orderDetail))
 
+    // envoi des valeurs dans le serveur
+    const sendDetails={
+        CART,
+        orderDetail
+        }
+    console.log(sendDetails)
 
-// //     if (isinvalidForm()) return
-// //     if (mailNotValid()) return
-// //     if (lastNameNotValid()) return
-// //     if (firstNameNotValid()) return 
-// //     if (addressNotValid()) return
-// //     if (cityNotValid()) return
+    if (isinvalidForm()) return
+    if (firstNameNotValid()) return
+    if (lastNameNotValid()) return
+    if (addressNotValid()) return
+    if (cityValid()) return
+    if (mailNotValid()) return
 
-//     alert("formulaire envoyé") // message form envoyé
-// }
-
-// function insertDetailForm(){
-// //     const form = document.querySelector(".cart__order__form")
-// //     const firstName = form.elements.firstName.value
-// //     const lastName = form.elements.lastName.value
-// //     const address = form.elements.address.value
-// //     const city = form.elements.city.value
-// //     const email = form.elements.email.value
- 
-//     const body = {
-//         contact: {
-//             firstName: firstName,
-//             lastName: lastName,
-//             address: address,
-//             city: city,
-//             email: email
-//         },
-//         products : ["jcsmqjcvmsljvlmsjklvlmsjkvfmqsjkfcmsqjklmfc"]
-//     }
-//     return body
-// }
-
-// function getId(){
-//     const numberOfProducts = localStorage.length
-//     const ids =[]
-//     for (let i = 0; i < numberOfProducts; i++){
-//         const keyz = localStorage.key(i)
-//         const id = keyz.split("-")[0]
-//         ids.push(id)
-//     }
-//     return ids
-// }
-
-// function isinvalidForm(){
    
-//     const inputs = form.querySelectorAll("input")
-//     inputs.forEach((input) =>{
-//         if (input.value === ""){
-//             alert("Remplissez tous les champs")
-//             return true
-//         }
-//         return false
-//     } )
-// }
-// // Expression réguluère utilisées fréquemment dasn le form
-// const regexText = /^[a-zA-Zàâäéèêëïîôöùûüç\-]+$/
-// const regexAddress = /^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+/
+    alert("formulaire envoyé")  // message form envoyé 
 
-// function firstNameNotValid(){
-//     const firstName =  document.querySelector("#firstNameErrormsg").value
-//     if (regexText.test(firstName) == false){
-//         alert("Veuillez saisir un prénom valide")
-//         return false
-//     }else {
-//         firstNameErrorMsg.innerHTML = null
-//         return true
-//     }
-// }
+    const options = {
+        method: "POST",
+        body: JSON.stringify(sendDetails),
+        headers: {
+            "Content-Type": "application/json",    
+        }
+    }
 
-// function lastNameNotValid(){
-//     const lastName =  document.querySelector("#lastNameErrormsg").value
-//     if (regexText.test(lastName) == false){
-//         alert("Veuillez saisir un nom valide")
-//         return false
-//     }else {
-//         lastNameErrorMsg.innerHTML = null
-//         return true
-//     }
-// }
+    // //requete post 
+    let url= ("http://localhost:3000/api/products/order")
+    fetch ( url , options)
+    .then((response) => response.json())
+    .then((data) => {
+        console.log(data)
+            // envoie sur page de confirmation avec données
+            document.location.href = "confirmation.html?id=" + data.orderId
+    })
+    .catch((err) =>console.log('Erreur:' + err));
+})
 
-// function addressNotValid(){
-//     const address =  document.querySelector("#addressErrormsg").value
-//     if (regexAddress.test(address) == false){
-//         alert("Veuillez saisir une adresse valide")
-//         return false
-//     }else {
-//         addressErrorMsg.innerHTML = null
-//         return true
-//     }
-// }
 
-// function cityNotValid(){
-//     const city =  document.querySelector("#cityErrormsg").value
-//     if (regexText.test(city) == false){
-//         alert("Veuillez saisir une ville valide")
-//         return false
-//     }else {
-//         cityErrorMsg.innerHTML = null
-//         return true
-//     }
-// }
+//mettre le contenu du LS dans les champs du formulaire
 
-// function mailNotValid(){
-//     const mail =  document.querySelector("#email").value
-//     const regexEmail =   /^(([^<()[\]\\.,;:\s@\]+(\.[^<()[\]\\.,;:\s@\]+)*)|(.+))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/
-//     if (regexEmail.test(mail) == false){
-//         alert("Veuillez saisir une adresse email valide")
-//         return false
-//     }else {
-//         emailErrorMsg.innerHTML = null
-//         return true
-//     }
-// }
+// const dataLS = localStorage.getItem("orderDetail") 
+// const dataLSObject = JSON.parse(dataLS)
+
+// document.querySelector("#firstName").setAttribute('value' , dataLSObject.firstName)
+// document.querySelector("#lastName").value = dataLSObject.lastName
+// document.querySelector("#address").value = dataLSObject.address
+// document.querySelector("#city").value = dataLSObject.city
+// document.querySelector("#email").value = dataLSObject.email
+
+
+// console.log(dataLS)
+// console.log(dataLSObject)
+
+
+
+   
+
+
+//validation du formulaire
+
+function isinvalidForm(){
+    const form = document.querySelector(".cart__order__form")
+    const inputs = form.querySelectorAll("input")
+    inputs.forEach((input) =>{
+        if (input.value === ""){
+            alert("Remplissez tous les champs")
+            return true
+        }
+        return false
+    } )
+}
+
+// Expression réguluère utilisées fréquemment dasn le form
+
+const regexText = (value) => {
+    return /^[A-Za-z+-]{3,25}$/.test(value)
+}
+const regexAddress = (value) => {
+    return /^[0-9a-zA-Z+-.\s]{3,40}$/.test(value)
+}
+
+const regexEmail = ( value) => {
+    // return /^[A-Za-z0-9+_.-]+@(.)$/.test(value)
+    return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)
+}
+
+function firstNameNotValid(){
+    const firstName =  document.querySelector("#firstName").value
+    if (regexText(firstName) == false){ 
+        document.getElementById("firstNameErrorMsg").textContent = "Veuillez remplir ce champ"
+        alert("Veuillez saisir un prénom valide")
+        return true
+    }else {
+        document.getElementById("firstNameErrorMsg").textContent = ""
+       return false
+    }
+}
+
+function lastNameNotValid(){
+    const lastName =  document.querySelector("#lastName").value
+    if (regexText(lastName) == false){
+        document.getElementById("lastNameErrorMsg").textContent = "Veuillez remplir ce champ"
+        alert("Veuillez saisir un nom valide")
+        return true
+    }else {
+        document.getElementById("lastNameErrorMsg").textContent = ""
+        return false
+    }
+}
+
+function addressNotValid(){
+    const address =  document.querySelector("#address").value
+    if (regexAddress(address) == false){
+        document.getElementById("addressErrorMsg").textContent = "Veuillez remplir ce champ"
+        alert("Veuillez saisir une adresse valide")
+        return true
+    }else {
+        document.getElementById("addressErrorMsg").textContent = ""
+        return false
+    }
+}
+
+function cityValid(){
+    const city =  document.querySelector("#city").value
+    if (regexText(city) == false){
+        document.getElementById("cityErrorMsg").textContent = "Veuillez remplir ce champ"
+        alert("Veuillez saisir un nom de ville valide")
+        return true
+    }else {
+        document.getElementById("cityErrorMsg").textContent = ""
+       return false
+    }
+}
+
+
+function mailNotValid(){
+    const mail =  document.querySelector("#email").value
+    if (regexEmail(mail) == false){
+        document.getElementById("emailErrorMsg").textContent = "Veuillez remplir ce champ"
+        alert("Veuillez saisir un email valide")
+        return true
+    }else {
+        document.getElementById("emailErrorMsg").textContent = ""
+        return false
+    }
+}
 

@@ -1,33 +1,20 @@
-// const orderId = getOrderId()
-// displayOrderWithId()
-// clearCache()
 
-// // recherches des id dans le local storage
-// function getOrderId(){
-// const queryString = window.location.search
-// const urlParams = new URLSearchParams(queryString)
-// return urlParams.get("orderId")
-
-// }
-
-// //envoi les id depuis le local Storage
-// function displayOrderWithId(orderId) {
-//     const orderIdElement = document.getElementById("orderId")
-//     orderIdElement.textContent = orderId
-// }
-
-// //supprimer les données du cache une fois le form envoyé
-// function clearCache(){
-//     const clear = window.localStorage
-//     clear.clear()
-// }
+getOrderId()
 
 function getOrderId(){
     let url = document.location.href
     url = new URL(url)
-    let id = url.searchParams.get("id")
+    let id = url.searchParams.get("orderId")
+    
+    // const queryString = window.location.search
+    // const urlParams = new URLSearchParams(queryString)
+    // return urlParams.get("orderId")
 
-    document.getElementById("orderId").textContent = id
+    document.getElementById("orderId").textContent = id //envoi les id depuis le local Storage
 }
 
-getOrderId()
+//supprimer les données du cache une fois le form envoyé
+function clearCache(){
+    const clear = window.localStorage
+    clear.clear()
+}
