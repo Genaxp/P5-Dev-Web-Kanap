@@ -69,7 +69,7 @@ function useButton() {
         button.addEventListener("click",(e) => {
             const color = document.querySelector("#colors").value
             const quantity = document.querySelector("#quantity").value
-        // if (isValidNumbersQuantity()) return
+        if (isValidNumbersQuantity()) return
         if (isCartValid(color,quantity)) return
 
         const cartStorage = localStorage.getItem("cart")
@@ -93,19 +93,19 @@ function useButton() {
 }
 
 function  isCartValid(color,quantity){
-    if (color == null || color ==="" || quantity == null || quantity==0){
+    if (color == null || color === "" || quantity == null || quantity == 0){
     alert ( "Veuillez choisir une couleur et une quantité")
     return
     }      
 }
      
-// function isValidNumbersQuantity() {
-//     const numbers = document.querySelector("#quantity").value
-//     const regex =  /[0-9]{1,100}/
-//     if(regex.test(numbers) === true){
-//         alert ("Choisissez une quantité entre 1 et 100")
-//         return true
-//     }
-//     return 
-// }
+function isValidNumbersQuantity() {
+    const numbers = document.querySelector("#quantity").value
+    const regex =   /^[1-9]$|^[1-9][0-9]$|^(100)$/                                // /^[0-9]{1,3}$/
+    if(regex.test(numbers) === false){
+        alert ("Choisissez une quantité entre 1 et 100")
+        return true
+    }
+    return false
+}
 
