@@ -1,4 +1,7 @@
 // Récupérer tous les items du CART depuis le localStorage avec une boucle
+/**
+ * 
+ */
 let CART = localStorage.getItem("cart")
 if (CART){
     CART= JSON.parse(CART)
@@ -6,9 +9,18 @@ if (CART){
     CART={}
 }
 //***********Récupération des données sur localStorage***********
+/**
+ * 
+ */
 let total = 0
+/**
+ * 
+ */
 const productPrices = {}
 
+/**
+ * 
+ */
 for (let i in CART){ //in = la clé
     let cartItem = CART[i]
     let id =cartItem.id
@@ -21,7 +33,12 @@ for (let i in CART){ //in = la clé
     })
 }
 
-
+/**
+ * 
+ * @param {object} item 
+ * @param {object} cartItem 
+ * @param {string} id 
+ */
 function displayItem(item,cartItem,id){
     const article = putArticle(item,cartItem)  //fais un article
     const imgdiv = putImageDiv(item)       // fais une div
@@ -38,18 +55,29 @@ function displayItem(item,cartItem,id){
 }
 
 // // mettre l'article dans la page HTML
+
+/**
+ * 
+ * @param {} article 
+ */
 function displayArticle(article){
     document.querySelector("#cart__items").appendChild(article)
 }
 
-// création de la quantité total 
-function displayTotalQuantity(item,cartItem){
+// création de la quantité total
+/**
+ * 
+ */
+function displayTotalQuantity(){
     const totalQuantity = document.querySelector("#totalQuantity")
     const total = Object.values(CART).reduce((total,cartItem) => total + cartItem.quantity,0)
     totalQuantity.textContent = total
 }
 
-// création du prix total 
+// création du prix total
+/**
+ * 
+ */
 function displayTotalPrice() {
     let total = 0
     for(let i in CART ){
@@ -60,6 +88,14 @@ function displayTotalPrice() {
 }
   
 // création de la div cart item content
+/**
+ * 
+ * @param {*} item 
+ * @param {*} cartItem 
+ * @param {number} newValue 
+ * @param {string} id 
+ * @returns {promise}
+ */
 function putItemContent(item,cartItem,newValue,id) {
     const itemContent = document.createElement("div") //création de la DIV
     itemContent.classList.add("cart__item__content") 
@@ -72,6 +108,16 @@ function putItemContent(item,cartItem,newValue,id) {
     return itemContent
 }
 
+/**
+ * 
+ * @param {object} item 
+ * @param {object} cartItem 
+ * @param {number} quantity 
+ * @param {string} id 
+ * @param {number} newValue 
+ * @param {string} id 
+ * @returns 
+ */
 function putSettings(item,cartItem,quantity,id,newValue,id) {
     const settings =  document.createElement("div")
     settings.classList.add("cart__item__content__settings")
@@ -80,6 +126,13 @@ function putSettings(item,cartItem,quantity,id,newValue,id) {
     return settings
 }
 
+/**
+ * 
+ * @param {*} settings 
+ * @param {*} cartItem 
+ * @param {*} id 
+ * @param {*} item 
+ */
 function DeleteToSettings(settings,cartItem,id,item) {
     const btn_del = document.createElement("div")
     btn_del.classList.add("cart__item__content__settings__delete")
@@ -91,6 +144,12 @@ function DeleteToSettings(settings,cartItem,id,item) {
     settings.appendChild(btn_del)
 } 
 
+/**
+ * 
+ * @param {*} cartItem 
+ * @param {*} item 
+ * @param {string} id 
+ */
 function deleteArticle(cartItem,item,id){
      deleteDataCache(item,cartItem,id)
      deleteArticlePage(cartItem,item)
@@ -100,6 +159,12 @@ function deleteArticle(cartItem,item,id){
 }
 
 // Supression article dans le localStorage
+
+/**
+ * 
+ * @param {*} item 
+ * @param {string} id 
+ */
 function deleteDataCache(item,id){
     const key = `${id}-${item.color}`
     delete CART[key]
@@ -107,6 +172,11 @@ function deleteDataCache(item,id){
 }
 
 // Supression article de la page visible
+/**
+ * 
+ * @param {*} cartItem 
+ * @param {*} item 
+ */
 function deleteArticlePage(cartItem,item){
     const deleteArticle = document.querySelector(
         `article[data-id="${item.id}"][data-color="${item.color}"]`
@@ -114,6 +184,13 @@ function deleteArticlePage(cartItem,item){
     deleteArticle.remove()
 }
 
+/**
+ * 
+ * @param {*} settings 
+ * @param {object} item 
+ * @param {object} cartItem 
+ * @param {string} id 
+ */
 function QuantityToSettings(settings, item,cartItem,id) {
     const quantity = document.createElement("div")
     quantity.classList.add("cart__item__content__settings__quantity")
@@ -133,19 +210,37 @@ function QuantityToSettings(settings, item,cartItem,id) {
 }   
 
 /*** Mise à jour de la quantité et du prix du pannier ***/
+
+/**
+ * 
+ * @param {string} id 
+ * @param {number} newValue 
+ * @param {*} cartItem 
+ */
 function updatePriceQuantity(id,newValue,cartItem) {
-    const itemUpdate =Object.values(CART).find((cartItem) =>cartItem.id === id)
-    itemUpdate.quantity= Number(newValue)
+    const itemUpdate =Object.values(CART).find((cartItem) => cartItem.id === id)
+    itemUpdate.quantity = Number(newValue)
     displayTotalPrice()
     displayTotalQuantity()
     saveDataCacheItem(cartItem)
 }
 
 /*** Modification de quantité dans le localStorage ***/
+
+/**
+ * 
+ * @param {object} cartItem 
+ */
 function saveDataCacheItem(cartItem) {
     localStorage.setItem("cart", JSON.stringify(CART))
 }
 
+/**
+ * 
+ * @param {object} item 
+ * @param {object} cartItem 
+ * @returns 
+ */
 function putDescription(item,cartItem) {
     const description = document.createElement("div")
     description.classList.add("cart__item__content__description")
@@ -165,11 +260,16 @@ function putDescription(item,cartItem) {
     return description
 }
 
-// création de l'image 
+// création de l'image
+
+/**
+ * 
+ * @param {object} item 
+ * @returns {}
+ */
 function putImageDiv(item){
     const div = document.createElement("div")// création de la DIV HTML
     div.classList.add("cart__item__img")
-
     const image = document.createElement('img') 
     image.src = item.imageUrl 
     image.alt = item.altTxt 
@@ -178,6 +278,13 @@ function putImageDiv(item){
 } 
 
 // création de l'article HTML
+
+/**
+ * 
+ * @param {object} cartItem 
+ * @param {object} item 
+ * @returns 
+ */
 function putArticle(cartItem,item){
     const article = document.createElement("article") 
     article.classList.add("cart__item") 
@@ -188,15 +295,20 @@ function putArticle(cartItem,item){
 
 //******************************création Page du form*****************************************
 
-// création d'une alerte d'envoi du formulaire
-
 const btn_order = document.querySelector("#order") 
 
 btn_order.addEventListener("click",(e) => {
     e.preventDefault() 
+   
+    let idCart =[]
+    for(let i in CART){
+        let article= CART[i]
+        if (!idCart.includes(article.id)){
+        idCart.push(article.id)
+        }
+    }
 
     const orderDetail = {
-         
         contact: {
         firstName: document.querySelector("#firstName").value,
         lastName: document.querySelector("#lastName").value,
@@ -204,25 +316,17 @@ btn_order.addEventListener("click",(e) => {
         city: document.querySelector("#city").value,
         email: document.querySelector("#email").value
         },
-        products : [idCart]
+        products : idCart
     }
 
-    const idCart =[]
-    for(let item in CART){
-        if (!idCart.includes(item.id)){
-        idCart.push(item.id)
-        }   
-    }
     // mise de l'objet dans le local storage
     localStorage.setItem("orderValues",JSON.stringify(orderDetail))
 
-    // envoi des valeurs dans le serveur
-    const sendDetails={
-        CART,
-        orderDetail
-        }
-    console.log(sendDetails)
+    //appel des vérififcations du form
 
+    /**
+     * Appels des fonctions 
+     */
     if (isinvalidForm()) return
     if (firstNameNotValid()) return
     if (lastNameNotValid()) return
@@ -230,78 +334,88 @@ btn_order.addEventListener("click",(e) => {
     if (cityValid()) return
     if (mailNotValid()) return
 
-   
-    alert("formulaire envoyé")  // message form envoyé 
+    // message form envoyé 
+  
+    alert("formulaire envoyé")  
 
+    // //requete post 
+    /**
+     * modification de la metho de GET à POST
+     */
     const options = {
         method: "POST",
-        body: JSON.stringify(sendDetails),
+        body: JSON.stringify(orderDetail),
         headers: {
             "Content-Type": "application/json",    
         }
     }
 
-    // //requete post 
-    let url= ("http://localhost:3000/api/products/order")
+    /**
+     * demande FETCH 
+     */
+    let url = "http://localhost:3000/api/products/order"
     fetch ( url , options)
     .then((response) => response.json())
     .then((data) => {
         console.log(data)
-            // envoie sur page de confirmation avec données
-            document.location.href = "confirmation.html?id=" + data.orderId
+        // envoie sur page de confirmation avec données
+        document.location.href = "confirmation.html?id=" + data.orderId
     })
     .catch((err) =>console.log('Erreur:' + err));
 })
 
 
-//mettre le contenu du LS dans les champs du formulaire
-
-// const dataLS = localStorage.getItem("orderDetail") 
-// const dataLSObject = JSON.parse(dataLS)
-
-// document.querySelector("#firstName").setAttribute('value' , dataLSObject.firstName)
-// document.querySelector("#lastName").value = dataLSObject.lastName
-// document.querySelector("#address").value = dataLSObject.address
-// document.querySelector("#city").value = dataLSObject.city
-// document.querySelector("#email").value = dataLSObject.email
-
-
-// console.log(dataLS)
-// console.log(dataLSObject)
-
-
-
-   
-
-
 //validation du formulaire
 
+/**
+ * Vérifie que le form soit valide
+ * @returns {boolean}
+ */
 function isinvalidForm(){
     const form = document.querySelector(".cart__order__form")
     const inputs = form.querySelectorAll("input")
     inputs.forEach((input) =>{
         if (input.value === ""){
-            alert("Remplissez tous les champs")
+            // alert("Remplissez tous les champs")
             return true
         }
         return false
     } )
 }
 
-// Expression réguluère utilisées fréquemment dasn le form
+// Expression réguluère utilisées fréquemment dans le form
 
+/**
+ * Vérifie que la valeur est un texte
+ * @param {string} value 
+ * @returns {boolean}
+ */
 const regexText = (value) => {
     return /^[A-Za-z+-]{3,25}$/.test(value)
 }
+
+/**
+ * Vérifie que la valeur est une adresse
+ * @param {string} value 
+ * @returns {boolean}
+ */
 const regexAddress = (value) => {
     return /^[0-9a-zA-Z+-.\s]{3,40}$/.test(value)
 }
 
+/**
+ * Vérifie que la valeur est une adresse email
+ * @param {string} value 
+ * @returns {boolean}
+ */
 const regexEmail = ( value) => {
-    // return /^[A-Za-z0-9+_.-]+@(.)$/.test(value)
     return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)
 }
 
+/**
+ * Vérifie que le nom soit saisi correctement
+ * @returns {boolean}
+ */
 function firstNameNotValid(){
     const firstName =  document.querySelector("#firstName").value
     if (regexText(firstName) == false){ 
@@ -314,6 +428,10 @@ function firstNameNotValid(){
     }
 }
 
+/**
+ * Vérifie que le prénom soit saisi correctement
+ * @returns {boolean}
+ */
 function lastNameNotValid(){
     const lastName =  document.querySelector("#lastName").value
     if (regexText(lastName) == false){
@@ -326,6 +444,10 @@ function lastNameNotValid(){
     }
 }
 
+/**
+ * Vérifie que l'adresse soit saisi correctement
+ * @returns {boolean}
+ */
 function addressNotValid(){
     const address =  document.querySelector("#address").value
     if (regexAddress(address) == false){
@@ -338,6 +460,10 @@ function addressNotValid(){
     }
 }
 
+/**
+ * Vérifie que le nom de la ville soit saisi correctement
+ * @returns {boolean}
+ */
 function cityValid(){
     const city =  document.querySelector("#city").value
     if (regexText(city) == false){
@@ -350,7 +476,10 @@ function cityValid(){
     }
 }
 
-
+/**
+ * Vérifie que l'adresse email soit valide
+ * @returns {boolean}
+ */
 function mailNotValid(){
     const mail =  document.querySelector("#email").value
     if (regexEmail(mail) == false){

@@ -1,18 +1,40 @@
 // Récupération paramètre d'URL
+
+/**
+ * 
+ */
 const queryString = window.location.search
+/**
+ * 
+ */
 const urlParams = new URLSearchParams(queryString)
+/**
+ * 
+ */
 const id = urlParams.get("id")
-  
+ /**
+  * 
+  */ 
 let itemPrice = 0
+
+/**
+ * 
+ */
 let imgUrl, altText,articleName
 useButton()
 
-
+/**
+ * 
+ */
 url = `http://localhost:3000/api/products/${id}`
 fetch (url)
     .then((response) => response.json())
     .then((res) => detail(res))
 
+/**
+ * 
+ * @param {Object} kanap 
+ */
 function detail(kanap){
     const { price , imageUrl, altTxt,name, description , colors} = kanap
     itemPrice = price
@@ -26,6 +48,11 @@ function detail(kanap){
     putColors(colors)
 }
 
+/**
+ * 
+ * @param {string} imageUrl 
+ * @param {string} altTxt 
+ */
 function putImage(imageUrl,altTxt){
     const image = document.createElement("img")
     image.src = imageUrl
@@ -35,21 +62,37 @@ function putImage(imageUrl,altTxt){
 
 }
 
+/**
+ * 
+ * @param {*} name 
+ */
 function putTitle(name){
     const h1 = document.querySelector("#title")
     if (h1 != null) h1.textContent = name
 }
 
+/**
+ * 
+ * @param {*} price 
+ */
 function putPrice(price){
     const span = document.querySelector("#price")
     if (span != null) span.textContent = price
 }
 
+/**
+ * 
+ * @param {*} description 
+ */
 function putDescription(description){
     const p = document.querySelector("#description")
     if (p != null) p.textContent = description
 }
 
+/**
+ * 
+ * @param {*} colors 
+ */
 function putColors(colors){
     const select = document.querySelector("#colors")
     if (select != null){
@@ -62,7 +105,13 @@ function putColors(colors){
     }
 }
 
+/**
+ * 
+ */
 function useButton() {
+    /**
+     * 
+     */
     const button = document.querySelector("#addToCart")
 
     if (button != null)  
@@ -71,7 +120,9 @@ function useButton() {
             const quantity = document.querySelector("#quantity").value
         if (isValidNumbersQuantity()) return
         if (isCartValid(color,quantity)) return
-
+        /**
+         * 
+         */
         const cartStorage = localStorage.getItem("cart")
         const cart = cartStorage ? JSON.parse(cartStorage) : {}
         const key = `${id}-${color}`
@@ -92,16 +143,27 @@ function useButton() {
     })
 }
 
+
+/**
+ * 
+ * @param {*} color 
+ * @param {number} quantity 
+ * @returns 
+ */
 function  isCartValid(color,quantity){
     if (color == null || color === "" || quantity == null || quantity == 0){
     alert ( "Veuillez choisir une couleur et une quantité")
     return
     }      
 }
-     
+  
+/**
+ * 
+ * @returns {boolean}
+ */
 function isValidNumbersQuantity() {
     const numbers = document.querySelector("#quantity").value
-    const regex =   /^[1-9]$|^[1-9][0-9]$|^(100)$/                                // /^[0-9]{1,3}$/
+    const regex =   /^[1-9]$|^[1-9][0-9]$|^(100)$/                      
     if(regex.test(numbers) === false){
         alert ("Choisissez une quantité entre 1 et 100")
         return true

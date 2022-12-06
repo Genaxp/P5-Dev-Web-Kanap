@@ -1,20 +1,27 @@
+// récupérerl'id depuis un lien 
 
-getOrderId()
-
+/**
+ * 
+ */
 function getOrderId(){
-    let url = document.location.href
-    url = new URL(url)
-    let id = url.searchParams.get("orderId")
-    
-    // const queryString = window.location.search
-    // const urlParams = new URLSearchParams(queryString)
-    // return urlParams.get("orderId")
+    let urlOn = document.location.href
+    urlOn = new URL(urlOn)
+    let id = urlOn.searchParams.get("id")
 
-    document.getElementById("orderId").textContent = id //envoi les id depuis le local Storage
+    //affichage de l'id daans le navigateur
+    document.getElementById("orderId").textContent = id 
 }
 
+
 //supprimer les données du cache une fois le form envoyé
+
+/**
+ * 
+ */
 function clearCache(){
     const clear = window.localStorage
     clear.clear()
 }
+
+getOrderId()
+clearCache()
