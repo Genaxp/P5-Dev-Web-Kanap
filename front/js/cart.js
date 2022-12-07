@@ -1,7 +1,4 @@
 // Récupérer tous les items du CART depuis le localStorage avec une boucle
-/**
- * 
- */
 let CART = localStorage.getItem("cart")
 if (CART){
     CART= JSON.parse(CART)
@@ -9,19 +6,11 @@ if (CART){
     CART={}
 }
 //***********Récupération des données sur localStorage***********
-/**
- * 
- */
+
 let total = 0
-/**
- * 
- */
 const productPrices = {}
 
-/**
- * 
- */
-for (let i in CART){ //in = la clé
+for (let i in CART){
     let cartItem = CART[i]
     let id =cartItem.id
     let url = `http://localhost:3000/api/products/${id}`
@@ -34,12 +23,13 @@ for (let i in CART){ //in = la clé
 }
 
 /**
- * 
- * @param {object} item 
- * @param {object} cartItem 
- * @param {string} id 
+ * création de la composition du panier
+ * @param {string} item 
+ * @param {string} cartItem 
+ * @param {number} id 
+ * @param {number} newValue 
  */
-function displayItem(item,cartItem,id){
+function displayItem(item,cartItem,id,newValue){
     const article = putArticle(item,cartItem)  //fais un article
     const imgdiv = putImageDiv(item)       // fais une div
     article.appendChild(imgdiv) 
@@ -50,24 +40,22 @@ function displayItem(item,cartItem,id){
     displayArticle(article,item, cartItem,id)     //montre le
     displayTotalPrice(item,cartItem,id)
     displayTotalQuantity(item,cartItem,id)
-    updatePriceQuantity(item,cartItem,id)   
+    updatePriceQuantity(item,cartItem,id,newValue)   
     deleteArticle(item,cartItem,id)
 }
 
 // // mettre l'article dans la page HTML
 
 /**
- * 
- * @param {} article 
+ * insérer un élèment dans  html
+ * @param {html element} article 
  */
 function displayArticle(article){
     document.querySelector("#cart__items").appendChild(article)
 }
 
 // création de la quantité total
-/**
- * 
- */
+
 function displayTotalQuantity(){
     const totalQuantity = document.querySelector("#totalQuantity")
     const total = Object.values(CART).reduce((total,cartItem) => total + cartItem.quantity,0)
@@ -75,9 +63,7 @@ function displayTotalQuantity(){
 }
 
 // création du prix total
-/**
- * 
- */
+
 function displayTotalPrice() {
     let total = 0
     for(let i in CART ){
@@ -87,14 +73,13 @@ function displayTotalPrice() {
     totalPrice.textContent= total 
 }
   
-// création de la div cart item content
 /**
- * 
- * @param {*} item 
- * @param {*} cartItem 
+ * création de la div cart item content
+ * @param {object} item 
+ * @param {object} cartItem 
  * @param {number} newValue 
  * @param {string} id 
- * @returns {promise}
+ * @returns {html element}
  */
 function putItemContent(item,cartItem,newValue,id) {
     const itemContent = document.createElement("div") //création de la DIV
@@ -109,16 +94,15 @@ function putItemContent(item,cartItem,newValue,id) {
 }
 
 /**
- * 
+ * ajout d'un autre élèment dans le html
  * @param {object} item 
  * @param {object} cartItem 
  * @param {number} quantity 
  * @param {string} id 
  * @param {number} newValue 
- * @param {string} id 
- * @returns 
+ * @returns {html element}
  */
-function putSettings(item,cartItem,quantity,id,newValue,id) {
+function putSettings(item,cartItem,quantity,id,newValue) {
     const settings =  document.createElement("div")
     settings.classList.add("cart__item__content__settings")
     QuantityToSettings(settings, item,cartItem,quantity,id,newValue)
@@ -127,11 +111,11 @@ function putSettings(item,cartItem,quantity,id,newValue,id) {
 }
 
 /**
- * 
- * @param {*} settings 
- * @param {*} cartItem 
- * @param {*} id 
- * @param {*} item 
+ * création de l'option supression article
+ * @param {html element} settings 
+ * @param {object} cartItem 
+ * @param {string} id 
+ * @param {object} item 
  */
 function DeleteToSettings(settings,cartItem,id,item) {
     const btn_del = document.createElement("div")
@@ -145,9 +129,9 @@ function DeleteToSettings(settings,cartItem,id,item) {
 } 
 
 /**
- * 
- * @param {*} cartItem 
- * @param {*} item 
+ * création de la fonction suprression article reliée aux autres fonctions
+ * @param {Object} cartItem 
+ * @param {Object} item 
  * @param {string} id 
  */
 function deleteArticle(cartItem,item,id){
@@ -158,11 +142,9 @@ function deleteArticle(cartItem,item,id){
      displayTotalPrice() 
 }
 
-// Supression article dans le localStorage
-
 /**
- * 
- * @param {*} item 
+ * Supression article dans le localStorage
+ * @param {Object} item 
  * @param {string} id 
  */
 function deleteDataCache(item,id){
@@ -171,11 +153,10 @@ function deleteDataCache(item,id){
     localStorage.setItem("cart",JSON.stringify(CART))
 }
 
-// Supression article de la page visible
 /**
- * 
- * @param {*} cartItem 
- * @param {*} item 
+ * Supression article de la page visible
+ * @param {Object} cartItem 
+ * @param {Object} item 
  */
 function deleteArticlePage(cartItem,item){
     const deleteArticle = document.querySelector(
@@ -185,8 +166,8 @@ function deleteArticlePage(cartItem,item){
 }
 
 /**
- * 
- * @param {*} settings 
+ * inseertion de la div dans le html et ses élèmentset fonctionnalités
+ * @param {html element} settings 
  * @param {object} item 
  * @param {object} cartItem 
  * @param {string} id 
@@ -209,13 +190,13 @@ function QuantityToSettings(settings, item,cartItem,id) {
     settings.appendChild(quantity)
 }   
 
-/*** Mise à jour de la quantité et du prix du pannier ***/
+/*** Mise à jour de la quantité et du prix du panier ***/
 
 /**
- * 
+ * Modifie le prix et la quantité du panier
  * @param {string} id 
  * @param {number} newValue 
- * @param {*} cartItem 
+ * @param {object} cartItem 
  */
 function updatePriceQuantity(id,newValue,cartItem) {
     const itemUpdate =Object.values(CART).find((cartItem) => cartItem.id === id)
@@ -228,7 +209,7 @@ function updatePriceQuantity(id,newValue,cartItem) {
 /*** Modification de quantité dans le localStorage ***/
 
 /**
- * 
+ * enregistrement dans le local storage
  * @param {object} cartItem 
  */
 function saveDataCacheItem(cartItem) {
@@ -236,10 +217,10 @@ function saveDataCacheItem(cartItem) {
 }
 
 /**
- * 
+ * Création de la description et de ses contenants
  * @param {object} item 
  * @param {object} cartItem 
- * @returns 
+ * @returns {html element}
  */
 function putDescription(item,cartItem) {
     const description = document.createElement("div")
@@ -263,9 +244,9 @@ function putDescription(item,cartItem) {
 // création de l'image
 
 /**
- * 
+ * Insertion et descriptin de l'image
  * @param {object} item 
- * @returns {}
+ * @returns {html element}
  */
 function putImageDiv(item){
     const div = document.createElement("div")// création de la DIV HTML
@@ -280,10 +261,10 @@ function putImageDiv(item){
 // création de l'article HTML
 
 /**
- * 
+ * définition de la couleur et quantity
  * @param {object} cartItem 
  * @param {object} item 
- * @returns 
+ * @returns {HTML Element}
  */
 function putArticle(cartItem,item){
     const article = document.createElement("article") 
@@ -340,7 +321,7 @@ btn_order.addEventListener("click",(e) => {
 
     // //requete post 
     /**
-     * modification de la metho de GET à POST
+     * modification de la methode de GET à POST
      */
     const options = {
         method: "POST",
@@ -351,7 +332,7 @@ btn_order.addEventListener("click",(e) => {
     }
 
     /**
-     * demande FETCH 
+     * création FETCH 
      */
     let url = "http://localhost:3000/api/products/order"
     fetch ( url , options)
@@ -363,7 +344,6 @@ btn_order.addEventListener("click",(e) => {
     })
     .catch((err) =>console.log('Erreur:' + err));
 })
-
 
 //validation du formulaire
 

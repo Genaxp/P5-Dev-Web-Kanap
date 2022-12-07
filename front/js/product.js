@@ -1,38 +1,18 @@
 // Récupération paramètre d'URL
-
-/**
- * 
- */
 const queryString = window.location.search
-/**
- * 
- */
 const urlParams = new URLSearchParams(queryString)
-/**
- * 
- */
 const id = urlParams.get("id")
- /**
-  * 
-  */ 
 let itemPrice = 0
-
-/**
- * 
- */
 let imgUrl, altText,articleName
 useButton()
 
-/**
- * 
- */
 url = `http://localhost:3000/api/products/${id}`
 fetch (url)
     .then((response) => response.json())
     .then((res) => detail(res))
 
 /**
- * 
+ * création des élèments de l'object
  * @param {Object} kanap 
  */
 function detail(kanap){
@@ -49,7 +29,7 @@ function detail(kanap){
 }
 
 /**
- * 
+ * détail de l'élèment image de l'objet Kanap
  * @param {string} imageUrl 
  * @param {string} altTxt 
  */
@@ -63,8 +43,8 @@ function putImage(imageUrl,altTxt){
 }
 
 /**
- * 
- * @param {*} name 
+ * détail de l'élèment name de l'objet Kanap
+ * @param {string} name 
  */
 function putTitle(name){
     const h1 = document.querySelector("#title")
@@ -72,8 +52,8 @@ function putTitle(name){
 }
 
 /**
- * 
- * @param {*} price 
+ * détail de l'élèment price de l'objet Kanap
+ * @param {string} price 
  */
 function putPrice(price){
     const span = document.querySelector("#price")
@@ -81,8 +61,8 @@ function putPrice(price){
 }
 
 /**
- * 
- * @param {*} description 
+ * détail de l'élèment description de l'objet Kanap
+ * @param {string} description 
  */
 function putDescription(description){
     const p = document.querySelector("#description")
@@ -90,8 +70,8 @@ function putDescription(description){
 }
 
 /**
- * 
- * @param {*} colors 
+ * détail de l'élèment colors de l'objet Kanap
+ * @param {string} colors 
  */
 function putColors(colors){
     const select = document.querySelector("#colors")
@@ -105,13 +85,8 @@ function putColors(colors){
     }
 }
 
-/**
- * 
- */
 function useButton() {
-    /**
-     * 
-     */
+   
     const button = document.querySelector("#addToCart")
 
     if (button != null)  
@@ -120,9 +95,7 @@ function useButton() {
             const quantity = document.querySelector("#quantity").value
         if (isValidNumbersQuantity()) return
         if (isCartValid(color,quantity)) return
-        /**
-         * 
-         */
+       
         const cartStorage = localStorage.getItem("cart")
         const cart = cartStorage ? JSON.parse(cartStorage) : {}
         const key = `${id}-${color}`
@@ -145,20 +118,21 @@ function useButton() {
 
 
 /**
- * 
- * @param {*} color 
+ * consition pour vérification de la conformité du produit
+ * @param {string} color 
  * @param {number} quantity 
- * @returns 
+ * @returns {boolean}
  */
 function  isCartValid(color,quantity){
     if (color == null || color === "" || quantity == null || quantity == 0){
     alert ( "Veuillez choisir une couleur et une quantité")
-    return
-    }      
+    return true
+    } 
+    return false     
 }
   
 /**
- * 
+ * conditions pour vérification d'une quantité précise
  * @returns {boolean}
  */
 function isValidNumbersQuantity() {

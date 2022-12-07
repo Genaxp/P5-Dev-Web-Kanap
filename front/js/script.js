@@ -1,7 +1,5 @@
 // Envoi requête HTTPde type GET au service web ===>renvoie promesse
-/**
- * 
- */
+
 let url = `http://localhost:3000/api/products`
 fetch(url)
     .then((response) => response.json()) //fonction appelée pour récupérer le résultat
@@ -11,8 +9,8 @@ fetch(url)
     })
 
 /**
- * 
- * @param {*} item 
+ * création des élèment du squelette composant un produit
+ * @param {string} item 
  */    
 function putItemsOnPage(item){
     item.forEach((kanap) => {    
@@ -31,11 +29,11 @@ function putItemsOnPage(item){
 } 
 
 /**
- * 
- * @param {*} article 
- * @param {*} image 
- * @param {*} h3 
- * @param {*} p 
+ * création des élèments dans le HTML
+ * @param {HTML Element} article 
+ * @param {string} image 
+ * @param {string} h3 
+ * @param {string} p 
  */
 function appendElementsToArticle(article, image, h3, p) {
     article.appendChild(image)
@@ -43,11 +41,10 @@ function appendElementsToArticle(article, image, h3, p) {
     article.appendChild(p)
  }
 
-
  /**
-  * 
-  * @param {*} id 
-  * @returns 
+  * création du lien vers autre page
+  * @param {string} id 
+  * @returns {html Element}
   */
  function putAnchor(id){
     const anchor = document.createElement("a")
@@ -56,9 +53,9 @@ function appendElementsToArticle(article, image, h3, p) {
 } 
 
 /**
- * 
- * @param {*} anchor 
- * @param {*} article 
+ * création des elements html href et article
+ * @param {html element} anchor 
+ * @param {html element} article 
  */
 function appendArticleaAnchor(anchor, article) { 
     const items = document.querySelector("#items")
@@ -69,10 +66,10 @@ function appendArticleaAnchor(anchor, article) {
 
 
  /**
-  * 
-  * @param {*} imageUrl 
-  * @param {*} altTxt 
-  * @returns 
+  * création de l'elèment image avec alt et src dans le html
+  * @param {string} imageUrl 
+  * @param {string} altTxt 
+  * @returns {html element}
   */
  function putImg(imageUrl, altTxt){
     const image = document.createElement("img")
@@ -83,9 +80,9 @@ function appendArticleaAnchor(anchor, article) {
 
 
 /**
- * 
- * @param {*} name 
- * @returns 
+ * création de l'élèment h3 avec alt et src dans le html
+ * @param {string} name 
+ * @returns {html element}
  */
 function putH3(name){
     const h3 = document.createElement("h3")
@@ -95,9 +92,9 @@ function putH3(name){
 }
 
 /**
- * 
- * @param {*} description 
- * @returns 
+ * création de l'élèment p dans le html
+ * @param {string} description 
+ * @returns {html Element}
  */
 function putP(description){
     const p = document.createElement("p")
