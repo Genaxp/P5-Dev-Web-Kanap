@@ -1,4 +1,6 @@
-// Récupération paramètre d'URL
+/**
+ * Récupération paramètre d'URL
+ */
 const queryString = window.location.search
 const urlParams = new URLSearchParams(queryString)
 const id = urlParams.get("id")
@@ -39,7 +41,6 @@ function putImage(imageUrl,altTxt){
     image.alt = altTxt
     const parent = document.querySelector(".item__img")
     if (parent != null) parent.appendChild(image)
-
 }
 
 /**
@@ -85,8 +86,10 @@ function putColors(colors){
     }
 }
 
+/**
+ * création du bouton ajout au panier
+ */
 function useButton() {
-   
     const button = document.querySelector("#addToCart")
 
     if (button != null)  
@@ -116,12 +119,11 @@ function useButton() {
     })
 }
 
-
 /**
  * consition pour vérification de la conformité du produit
- * @param {string} color 
- * @param {number} quantity 
- * @returns {boolean}
+ * @param {String} color 
+ * @param {Number} quantity 
+ * @returns {Boolean}
  */
 function  isCartValid(color,quantity){
     if (color == null || color === "" || quantity == null || quantity == 0){
@@ -133,7 +135,7 @@ function  isCartValid(color,quantity){
   
 /**
  * conditions pour vérification d'une quantité précise
- * @returns {boolean}
+ * @returns {Boolean}
  */
 function isValidNumbersQuantity() {
     const numbers = document.querySelector("#quantity").value

@@ -1,12 +1,17 @@
-// Récupérer tous les items du CART depuis le localStorage avec une boucle
+/**
+ * Récupérer tous les items du CART depuis le localStorage avec une boucle
+ */
+
 let CART = localStorage.getItem("cart")
 if (CART){
     CART= JSON.parse(CART)
 } else {
     CART={}
 }
-//***********Récupération des données sur localStorage***********
 
+/**
+ *Récupération des données sur localStorage 
+ */
 let total = 0
 const productPrices = {}
 
@@ -24,12 +29,12 @@ for (let i in CART){
 
 /**
  * création de la composition du panier
- * @param {string} item 
- * @param {string} cartItem 
- * @param {number} id 
- * @param {number} newValue 
+ * @param {Object} item 
+ * @param {Object} cartItem 
+ * @param {Number} id 
+ * @param {Number} newValue 
  */
-function displayItem(item,cartItem,id,newValue){
+function displayItem(item,cartItem,id){
     const article = putArticle(item,cartItem)  //fais un article
     const imgdiv = putImageDiv(item)       // fais une div
     article.appendChild(imgdiv) 
@@ -40,30 +45,30 @@ function displayItem(item,cartItem,id,newValue){
     displayArticle(article,item, cartItem,id)     //montre le
     displayTotalPrice(item,cartItem,id)
     displayTotalQuantity(item,cartItem,id)
-    updatePriceQuantity(item,cartItem,id,newValue)   
-    deleteArticle(item,cartItem,id)
+    updatePriceQuantity(id,cartItem.quantity,cartItem)   
 }
-
-// // mettre l'article dans la page HTML
 
 /**
  * insérer un élèment dans  html
  * @param {html element} article 
  */
 function displayArticle(article){
+    console.log(article)
     document.querySelector("#cart__items").appendChild(article)
 }
 
-// création de la quantité total
-
+/**
+ * création de la quantité total
+ */
 function displayTotalQuantity(){
     const totalQuantity = document.querySelector("#totalQuantity")
     const total = Object.values(CART).reduce((total,cartItem) => total + cartItem.quantity,0)
     totalQuantity.textContent = total
 }
 
-// création du prix total
-
+/**
+ * création du prix total
+ */
 function displayTotalPrice() {
     let total = 0
     for(let i in CART ){
@@ -75,10 +80,10 @@ function displayTotalPrice() {
   
 /**
  * création de la div cart item content
- * @param {object} item 
- * @param {object} cartItem 
- * @param {number} newValue 
- * @param {string} id 
+ * @param {Object} item 
+ * @param {Object} cartItem 
+ * @param {Number} newValue 
+ * @param {String} id 
  * @returns {html element}
  */
 function putItemContent(item,cartItem,newValue,id) {
@@ -95,11 +100,11 @@ function putItemContent(item,cartItem,newValue,id) {
 
 /**
  * ajout d'un autre élèment dans le html
- * @param {object} item 
- * @param {object} cartItem 
- * @param {number} quantity 
- * @param {string} id 
- * @param {number} newValue 
+ * @param {Object} item 
+ * @param {Object} cartItem 
+ * @param {Number} quantity 
+ * @param {String} id 
+ * @param {Number} newValue 
  * @returns {html element}
  */
 function putSettings(item,cartItem,quantity,id,newValue) {
@@ -113,9 +118,9 @@ function putSettings(item,cartItem,quantity,id,newValue) {
 /**
  * création de l'option supression article
  * @param {html element} settings 
- * @param {object} cartItem 
- * @param {string} id 
- * @param {object} item 
+ * @param {Object} cartItem 
+ * @param {String} id 
+ * @param {Object} item 
  */
 function DeleteToSettings(settings,cartItem,id,item) {
     const btn_del = document.createElement("div")
@@ -132,12 +137,11 @@ function DeleteToSettings(settings,cartItem,id,item) {
  * création de la fonction suprression article reliée aux autres fonctions
  * @param {Object} cartItem 
  * @param {Object} item 
- * @param {string} id 
+ * @param {String} id 
  */
 function deleteArticle(cartItem,item,id){
      deleteDataCache(item,cartItem,id)
      deleteArticlePage(cartItem,item)
-
      displayTotalQuantity()
      displayTotalPrice() 
 }
@@ -145,7 +149,7 @@ function deleteArticle(cartItem,item,id){
 /**
  * Supression article dans le localStorage
  * @param {Object} item 
- * @param {string} id 
+ * @param {String} id 
  */
 function deleteDataCache(item,id){
     const key = `${id}-${item.color}`
@@ -167,10 +171,10 @@ function deleteArticlePage(cartItem,item){
 
 /**
  * inseertion de la div dans le html et ses élèmentset fonctionnalités
- * @param {html element} settings 
- * @param {object} item 
- * @param {object} cartItem 
- * @param {string} id 
+ * @param {Html element} settings 
+ * @param {Object} item 
+ * @param {Object} cartItem 
+ * @param {String} id 
  */
 function QuantityToSettings(settings, item,cartItem,id) {
     const quantity = document.createElement("div")
@@ -194,12 +198,12 @@ function QuantityToSettings(settings, item,cartItem,id) {
 
 /**
  * Modifie le prix et la quantité du panier
- * @param {string} id 
- * @param {number} newValue 
- * @param {object} cartItem 
+ * @param {String} id 
+ * @param {Number} newValue 
+ * @param {Object} cartItem 
  */
 function updatePriceQuantity(id,newValue,cartItem) {
-    const itemUpdate =Object.values(CART).find((cartItem) => cartItem.id === id)
+    const itemUpdate =Object.values(CART).find((p) => p.id === id)
     itemUpdate.quantity = Number(newValue)
     displayTotalPrice()
     displayTotalQuantity()
@@ -241,8 +245,6 @@ function putDescription(item,cartItem) {
     return description
 }
 
-// création de l'image
-
 /**
  * Insertion et descriptin de l'image
  * @param {object} item 
@@ -258,8 +260,6 @@ function putImageDiv(item){
     return div
 } 
 
-// création de l'article HTML
-
 /**
  * définition de la couleur et quantity
  * @param {object} cartItem 
@@ -274,8 +274,9 @@ function putArticle(cartItem,item){
     return article
 }
 
-//******************************création Page du form*****************************************
-
+/**
+ * création Page du form*
+ */
 const btn_order = document.querySelector("#order") 
 
 btn_order.addEventListener("click",(e) => {
@@ -300,10 +301,10 @@ btn_order.addEventListener("click",(e) => {
         products : idCart
     }
 
-    // mise de l'objet dans le local storage
+    /**
+     * mise de l'objet dans le local storage
+     */
     localStorage.setItem("orderValues",JSON.stringify(orderDetail))
-
-    //appel des vérififcations du form
 
     /**
      * Appels des fonctions 
@@ -315,11 +316,11 @@ btn_order.addEventListener("click",(e) => {
     if (cityValid()) return
     if (mailNotValid()) return
 
-    // message form envoyé 
-  
+    /**
+    * message form envoyé 
+    */ 
     alert("formulaire envoyé")  
 
-    // //requete post 
     /**
      * modification de la methode de GET à POST
      */
@@ -345,11 +346,9 @@ btn_order.addEventListener("click",(e) => {
     .catch((err) =>console.log('Erreur:' + err));
 })
 
-//validation du formulaire
-
 /**
  * Vérifie que le form soit valide
- * @returns {boolean}
+ * @returns {Boolean}
  */
 function isinvalidForm(){
     const form = document.querySelector(".cart__order__form")
@@ -363,21 +362,23 @@ function isinvalidForm(){
     } )
 }
 
-// Expression réguluère utilisées fréquemment dans le form
+/**
+ * Expression réguluère utilisées fréquemment dans le form
+*/
 
 /**
  * Vérifie que la valeur est un texte
- * @param {string} value 
- * @returns {boolean}
+ * @param {String} value 
+ * @returns {Boolean}
  */
 const regexText = (value) => {
-    return /^[A-Za-z+-]{3,25}$/.test(value)
+    return /^[A-Za-z+é-]{3,25}$/.test(value)
 }
 
 /**
  * Vérifie que la valeur est une adresse
- * @param {string} value 
- * @returns {boolean}
+ * @param {String} value 
+ * @returns {Boolean}
  */
 const regexAddress = (value) => {
     return /^[0-9a-zA-Z+-.\s]{3,40}$/.test(value)
@@ -385,8 +386,8 @@ const regexAddress = (value) => {
 
 /**
  * Vérifie que la valeur est une adresse email
- * @param {string} value 
- * @returns {boolean}
+ * @param {String} value 
+ * @returns {Boolean}
  */
 const regexEmail = ( value) => {
     return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)
@@ -394,7 +395,7 @@ const regexEmail = ( value) => {
 
 /**
  * Vérifie que le nom soit saisi correctement
- * @returns {boolean}
+ * @returns {Boolean}
  */
 function firstNameNotValid(){
     const firstName =  document.querySelector("#firstName").value
@@ -410,7 +411,7 @@ function firstNameNotValid(){
 
 /**
  * Vérifie que le prénom soit saisi correctement
- * @returns {boolean}
+ * @returns {Boolean}
  */
 function lastNameNotValid(){
     const lastName =  document.querySelector("#lastName").value
@@ -426,7 +427,7 @@ function lastNameNotValid(){
 
 /**
  * Vérifie que l'adresse soit saisi correctement
- * @returns {boolean}
+ * @returns {Boolean}
  */
 function addressNotValid(){
     const address =  document.querySelector("#address").value
@@ -442,7 +443,7 @@ function addressNotValid(){
 
 /**
  * Vérifie que le nom de la ville soit saisi correctement
- * @returns {boolean}
+ * @returns {Boolean}
  */
 function cityValid(){
     const city =  document.querySelector("#city").value
@@ -458,7 +459,7 @@ function cityValid(){
 
 /**
  * Vérifie que l'adresse email soit valide
- * @returns {boolean}
+ * @returns {Boolean}
  */
 function mailNotValid(){
     const mail =  document.querySelector("#email").value
