@@ -45,7 +45,7 @@ function displayItem(item,cartItem,id){
     displayArticle(article,item, cartItem,id)     //montre le
     displayTotalPrice(item,cartItem,id)
     displayTotalQuantity(item,cartItem,id)
-    updatePriceQuantity(id,cartItem.quantity,cartItem)   
+    // updatePriceQuantity(id,cartItem.quantity,cartItem)   
 }
 
 /**
@@ -189,7 +189,7 @@ function QuantityToSettings(settings, item,cartItem,id) {
     input.min = "1"
     input.max = "100"
     input.value = cartItem.quantity 
-    input.addEventListener("input", ()=> updatePriceQuantity (cartItem.id,input.value,id))
+    input.addEventListener("input", ()=> updatePriceQuantity (cartItem.id,cartItem.color,input.value,id))
     quantity.appendChild(input)
     settings.appendChild(quantity)
 }   
@@ -202,21 +202,22 @@ function QuantityToSettings(settings, item,cartItem,id) {
  * @param {Number} newValue 
  * @param {Object} cartItem 
  */
-function updatePriceQuantity(id,newValue,cartItem) {
-    const itemUpdate =Object.values(CART).find((p) => p.id === id)
+function updatePriceQuantity(id,color,newValue,cartItem) {
+    const itemUpdate =Object.values(CART).find((p) => p.id === id && p.color === color)
     itemUpdate.quantity = Number(newValue)
+    // id.quantity = itemUpdate.quantity
     displayTotalPrice()
     displayTotalQuantity()
-    saveDataCacheItem(cartItem)
+
+    saveDataCacheItem(cartItem,id)
 }
 
 /*** Modification de quantité dans le localStorage ***/
 
 /**
  * enregistrement dans le local storage
- * @param {object} cartItem 
  */
-function saveDataCacheItem(cartItem) {
+function saveDataCacheItem() {
     localStorage.setItem("cart", JSON.stringify(CART))
 }
 
